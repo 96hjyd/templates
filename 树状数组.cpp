@@ -12,7 +12,7 @@ void modify(int	x,int add)//一维
 }
 int get_sum(int	x)
 {		
-	int	ret=0;
+	int ret=0;
 	while(x!=0)		
 	{							
 		ret+=a[x];			
