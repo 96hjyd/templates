@@ -6,5 +6,5 @@ unsigned int BKDRHash(char *str)
 	{
 		hash = hash * seed + (*str++);
 	}
-	return (hash & 0x7FFFFFFF);
+	return (hash & 0x7FFFFFFF);//此处取模
 }
