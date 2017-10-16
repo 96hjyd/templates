@@ -16,7 +16,7 @@ int extgcd(int a, int b, int &x, int &y)
     }
     return d;
 }
-//a×x+b×y=c,返回x的最小整数解
+//ax+by=c,返回x的最小整数解
 int cal(int a, int b, int c)
 {
     int x, y;
@@ -29,3 +29,8 @@ int cal(int a, int b, int c)
     if(ans <= 0) ans += b;
     return ans;
 }
+/*
+同余方程
+ax≡b(mod n) ，转化为 ax+ny=b ，当 b%gcd(a,n)=0 时，方程有 gcd(a,n) 个解
+ax≡1(mod n) ，如果 gcd(a,n)=1 ，则方程有唯一解
+*/
