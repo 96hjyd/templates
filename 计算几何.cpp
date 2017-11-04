@@ -23,7 +23,7 @@ bool operator==(const Point& a,const Point& b)
 double Cross(Point A,Point B) {return A.x*B.y-A.y*B.x;}
 double Dot(Point A,Point B) {return A.x*B.x+A.y*B.y;}
 double Length(Point A) {return sqrt(Dot(A,A));}
-double Angle(Point A,Point B) {return acos(Dot(A,B))/Length(A)/Length(B);}
+double Angle(Point A,Point B) {return acos(Dot(A,B)/Length(A)/Length(B));}
 int ConvexHall(Point* p,int n,Point* ch)
 {
     sort(p,p+n);
