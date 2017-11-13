@@ -50,8 +50,8 @@ private:
 		if (l > r) return 0;
 		int now = ++tot;
 		P = p;
-		sort(K + l, K + r + 1);
 		int mid = (l + r) / 2;
+		nth_element(K+l,K+mid,K+r+1);
 		t[now] = KDT_Point(K[mid]);
 		t[now].l = build(l, mid - 1, K, (p + 1) % KDTp);
 		t[now].r = build(mid + 1, r, K, (p + 1) % KDTp);
