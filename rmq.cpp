@@ -16,7 +16,7 @@ void rmq_init()
 	{
 		for(int i=n;i>=1;i--)
 		{
-			if(1+(1<<(j-1))<=n)
+			if(i+(1<<(j-1))<=n)
 			{
 				f1[i][j]=min(f1[i][j-1],f1[i+(1<<(j-1))][j-1]);
 				f2[i][j]=max(f2[i][j-1],f2[i+(1<<(j-1))][j-1]);
