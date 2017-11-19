@@ -3,7 +3,7 @@ int ch[1000000][26],last[1000000],f[1000000],val[1000000];
 void init()
 {
 	sz=0;
-	memset(ch[0],0,sizeof(ch[0]));
+	memset(ch,0,sizeof(ch));
 	memset(last,0,sizeof(last));
 	memset(f,0,sizeof(f));
 	memset(val,0,sizeof(val));
