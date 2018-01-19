@@ -81,7 +81,7 @@ int Gauss(int equ,int var)
 		if(max_r!=k)
 		{
 			// 与第k行交换.
-			for(j=k; j<var+1; j++) swap(a[k][j],a[max_r][j]);
+			for(j=col; j<=var; j++) swap(a[k][j],a[max_r][j]);
 		}
 		if(a[k][col]==0)
 		{
