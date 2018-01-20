@@ -1,7 +1,6 @@
 int MinimumRepresentation(char *s, int len)
 {
-    int i = 0, j = 1, count = 0, t;
- 
+    int i = 0, j = 1, count = 0;
     while (i < len && j < len && count < len)
     {
         if(s[(i + count) % len] == s[(j + count) % len])
