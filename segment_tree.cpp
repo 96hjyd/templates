@@ -54,13 +54,7 @@ int main()
 		sortb[i]=b[i];
 	}
 	sort(sortb+1,sortb+n+1);
-	for(int i=2;i<=n;i++)
-	{
-		if(sortb[cnt]!=sortb[i])
-		{
-			sortb[++cnt]=sortb[i];
-		}
-	}
+	cnt=unique(sortb+1,sortb+1+n)-sortb-1;
 	rt[0]=build(1,cnt);
 	for(int i=1;i<=n;i++)
 	{
