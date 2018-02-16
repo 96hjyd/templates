@@ -1,224 +1,185 @@
-#define MAXN 100010
-struct Node
+#include<iostream>
+#include<cstring>
+#include<cstdio>
+using namespace std;
+#define MAXN 1000000
+int ch[MAXN][2],f[MAXN],size[MAXN],cnt[MAXN],key[MAXN];
+int sz,root;
+inline void clear(int x)
 {
-	int key,sz,cnt;
-	Node *ch[2],*pnt;
-	Node(){}
-	Node(int x,int y,int z)
-	{
-		key=x,sz=y,cnt=z;
-	}
-	void rs()
-	{
-		sz=ch[0]->sz+ch[1]->sz+cnt;
-	}
-}nil(0,0,0),*NIL=&nil;
-struct Splay
+	ch[x][0]=ch[x][1]=f[x]=size[x]=cnt[x]=key[x]=0;
+}
+inline bool get(int x)
 {
-	Node* root;
-	int ncnt;
-	Node nod[MAXN];
-	void init()
-	{
-		root=NIL;
-		ncnt=0;
+	return ch[f[x]][1]==x;
+}
+inline void update(int x)
+{
+	if (x) {
+		size[x]=cnt[x];
+		if (ch[x][0]) size[x]+=size[ch[x][0]];
+		if (ch[x][1]) size[x]+=size[ch[x][1]];
 	}
-	void rotate(Node* x,bool d)
-	{
-		Node *y=x->pnt;
-		y->ch[!d]=x->ch[d];
-		if(x->ch[d]!=NIL)
-			x->ch[d]->pnt=y;
-		x->pnt=y->pnt;
-		if(y->pnt!=NIL)
-		{
-			if(y==y->pnt->ch[d])
-				y->pnt->ch[d]=x;
-			else 
-				y->pnt->ch[!d]=x;
-		}
-		x->ch[d]=y;
-		y->pnt=x;
-		y->rs();
-		x->rs();
+}
+inline void rotate(int x)
+{
+	int old=f[x],oldf=f[old],whichx=get(x);
+	ch[old][whichx]=ch[x][whichx^1];
+	f[ch[old][whichx]]=old;
+	ch[x][whichx^1]=old;
+	f[old]=x;
+	f[x]=oldf;
+	if (oldf)
+		ch[oldf][ch[oldf][1]==old]=x;
+	update(old);
+	update(x);
+}
+inline void splay(int x)
+{
+	for (int fa; fa=f[x]; rotate(x))
+		if (f[fa])
+			rotate((get(x)==get(fa))?fa:x);
+	root=x;
+}
+inline void insert(int x)
+{
+	if (root==0) {
+		sz++;
+		ch[sz][0]=ch[sz][1]=f[sz]=0;
+		root=sz;
+		size[sz]=cnt[sz]=1;
+		key[sz]=x;
+		return;
 	}
-	void splay(Node* x,Node* target)
-	{
-		Node* y;
-		while(x->pnt!=target)
-		{
-			y=x->pnt;
-			if(x==y->ch[0])
-			{
-				if(y->pnt!=target&&y==y->pnt->ch[0])
-					rotate(y,true);
-				rotate(x,true);
-			}
-			else
-			{
-				if(y->pnt!=target&&y==y->pnt->ch[1])
-					rotate(y,false);
-				rotate(x,false);
-			}
+	int now=root,fa=0;
+	while(1) {
+		if (x==key[now]) {
+			cnt[now]++;
+			update(now);
+			update(fa);
+			splay(now);
+			break;
 		}
-		if(target==NIL)
-			root=x;
+		fa=now;
+		now=ch[now][key[now]<x];
+		if (now==0) {
+			sz++;
+			ch[sz][0]=ch[sz][1]=0;
+			f[sz]=fa;
+			size[sz]=cnt[sz]=1;
+			ch[fa][key[fa]<x]=sz;
+			key[sz]=x;
+			update(fa);
+			splay(sz);
+			break;
+		}
 	}
-	void insert(int key)
-	{
-		if(root==NIL)
-		{
-			ncnt=0;
-			root=&nod[++ncnt];
-			root->ch[0]=root->ch[1]=root->pnt=NIL;
-			root->key=key;
-			root->sz=root->cnt=1;
-			return ;
+}
+inline int find(int x)
+{
+	int now=root,ans=0;
+	while(1) {
+		if (x<key[now])
+			now=ch[now][0];
+		else {
+			ans+=(ch[now][0]?size[ch[now][0]]:0);
+			if (x==key[now]) {
+				splay(now);
+				return ans+1;
+			}
+			ans+=cnt[now];
+			now=ch[now][1];
 		}
-		Node *x=root,*y;
-		while(1)
-		{
-			x->sz++;
-			if(key==x->key)
-			{
-				x->cnt++;
-				x->rs();
-				y=x;
-				break;
-			}
-			else if(key<x->key)
-			{
-				if(x->ch[0]!=NIL)
-					x=x->ch[0];
-				else
-				{
-					x->ch[0]=&nod[++ncnt];
-					y=x->ch[0];
-					y->key=key;
-					y->sz=y->cnt=1;
-					y->ch[0]=y->ch[1]=NIL;
-					y->pnt=x;
-					break;
-				}
-			}
-			else
-			{
-				if(x->ch[1]!=NIL)
-					x=x->ch[1];
-				else
-				{
-					x->ch[1]=&nod[++ncnt];
-					y=x->ch[1];
-					y->key=key;
-					y->sz=y->cnt=1;
-					y->ch[0]=y->ch[1]=NIL;
-					y->pnt=x;
-					break;
-				}
-			}
-		}
-		splay(y,NIL);
 	}
-	Node* search(int key)
-	{
-		if(root==NIL)
-			return NIL;
-		Node *x=root,*y=NIL;
-		while(1)
-		{
-			if(key==x->key)
-			{
-				y=x;
-				break;
-			}
-			else if(key>x->key)
-			{
-				if(x->ch[1]!=NIL)
-					x=x->ch[1];
-				else break;
-			}
-			else
-			{
-				if(x->ch[0]!=NIL)
-					x=x->ch[0];
-				else break;
-			}
+}
+inline int findx(int x)
+{
+	int now=root;
+	while(1) {
+		if (ch[now][0]&&x<=size[ch[now][0]])
+			now=ch[now][0];
+		else {
+			int temp=(ch[now][0]?size[ch[now][0]]:0)+cnt[now];
+			if (x<=temp) return key[now];
+			x-=temp;
+			now=ch[now][1];
 		}
-		splay(x,NIL);
-		return y;
 	}
-	Node* searchmin(Node*x)
-	{
-		Node*y=x->pnt;
-		while(x->ch[0]!=NIL)
-			x=x->ch[0];
-		splay(x,y);
-		return x;
+}
+inline int pre()
+{
+	int now=ch[root][0];
+	while (ch[now][1]) now=ch[now][1];
+	return now;
+}
+inline int next()
+{
+	int now=ch[root][1];
+	while (ch[now][0]) now=ch[now][0];
+	return now;
+}
+inline void del(int x)
+{
+	int whatever=find(x);
+	if (cnt[root]>1) {
+		cnt[root]--;
+		update(root);
+		return;
 	}
-	void del(int key)
-	{
-		if(root==NIL) return ;
-		Node *x=search(key),*y;
-		if(x==NIL) return ;
-		if(x->cnt>1)
-		{
-			x->cnt--;
-			x->rs();
-			return ;
-		}
-		else if(x->ch[0]==NIL&&x->ch[1]==NIL)
-		{
-			init();
-			return ;
-		}
-		else if(x->ch[0]==NIL)
-		{
-			root=x->ch[1];
-			x->ch[1]->pnt=NIL;
-			return ;
-		}
-		else if(x->ch[1]==NIL)
-		{
-			root=x->ch[0];
-			x->ch[0]->pnt=NIL;
-			return ;
-		}
-		y=searchmin(x->ch[1]);
-		y->pnt=NIL;
-		y->ch[0]=x->ch[0];
-		x->ch[0]->pnt=y;
-		y->rs();
-		root=y;
+	if (!ch[root][0]&&!ch[root][1]) {
+		clear(root);
+		root=0;
+		return;
 	}
-	int rank(int key)
-	{
-		Node *x=search(key);
-		if(x==NIL) return 0;
-		return x->ch[0]->sz+1;
+	if (!ch[root][0]) {
+		int oldroot=root;
+		root=ch[root][1];
+		f[root]=0;
+		clear(oldroot);
+		return;
+	} else if (!ch[root][1]) {
+		int oldroot=root;
+		root=ch[root][0];
+		f[root]=0;
+		clear(oldroot);
+		return;
 	}
-	Node* findk(int kth)
-	{
-		if(root==NIL||kth>root->sz)
-			return NIL;
-		Node* x=root;
-		while(1)
-		{
-			if(x->ch[0]->sz+1<=kth&&kth<=x->ch[0]->sz+x->cnt)
-				break;
-			else if(kth<=x->ch[0]->sz)
-				x=x->ch[0];
-			else
-			{
-				kth-=x->ch[0]->sz+x->cnt;
-				x=x->ch[1];
-			}
-		}
-		splay(x,NIL);
-		return x;
-	}
-}sp;
+	int leftbig=pre(),oldroot=root;
+	splay(leftbig);
+	ch[root][1]=ch[oldroot][1];
+	f[ch[oldroot][1]]=root;
+	clear(oldroot);
+	update(root);
+}
 int main()
 {
-	sp.init();
-	return 0;
+	int n,opt,x;
+	scanf("%d",&n);
+	for (int i=1; i<=n; ++i) {
+		scanf("%d%d",&opt,&x);
+		switch(opt) {
+			case 1:
+				insert(x);
+				break;
+			case 2:
+				del(x);
+				break;
+			case 3:
+				printf("%d\n",find(x));
+				break;
+			case 4:
+				printf("%d\n",findx(x));
+				break;
+			case 5:
+				insert(x);
+				printf("%d\n",key[pre()]);
+				del(x);
+				break;
+			case 6:
+				insert(x);
+				printf("%d\n",key[next()]);
+				del(x);
+				break;
+		}
+	}
 }
