@@ -15,7 +15,8 @@ inline bool get(int x)
 }
 inline void update(int x)
 {
-	if (x) {
+	if (x)
+	{
 		size[x]=cnt[x];
 		if (ch[x][0]) size[x]+=size[ch[x][0]];
 		if (ch[x][1]) size[x]+=size[ch[x][1]];
@@ -43,7 +44,8 @@ inline void splay(int x)
 }
 inline void insert(int x)
 {
-	if (root==0) {
+	if (root==0)
+	{
 		sz++;
 		ch[sz][0]=ch[sz][1]=f[sz]=0;
 		root=sz;
@@ -52,8 +54,10 @@ inline void insert(int x)
 		return;
 	}
 	int now=root,fa=0;
-	while(1) {
-		if (x==key[now]) {
+	while(1)
+	{
+		if (x==key[now])
+		{
 			cnt[now]++;
 			update(now);
 			update(fa);
@@ -62,7 +66,8 @@ inline void insert(int x)
 		}
 		fa=now;
 		now=ch[now][key[now]<x];
-		if (now==0) {
+		if (now==0)
+		{
 			sz++;
 			ch[sz][0]=ch[sz][1]=0;
 			f[sz]=fa;
@@ -78,12 +83,15 @@ inline void insert(int x)
 inline int find(int x)
 {
 	int now=root,ans=0;
-	while(1) {
+	while(1)
+	{
 		if (x<key[now])
 			now=ch[now][0];
-		else {
+		else
+		{
 			ans+=(ch[now][0]?size[ch[now][0]]:0);
-			if (x==key[now]) {
+			if (x==key[now])
+			{
 				splay(now);
 				return ans+1;
 			}
@@ -95,10 +103,12 @@ inline int find(int x)
 inline int findx(int x)
 {
 	int now=root;
-	while(1) {
+	while(1)
+	{
 		if (ch[now][0]&&x<=size[ch[now][0]])
 			now=ch[now][0];
-		else {
+		else
+		{
 			int temp=(ch[now][0]?size[ch[now][0]]:0)+cnt[now];
 			if (x<=temp) return key[now];
 			x-=temp;
@@ -121,23 +131,28 @@ inline int next()
 inline void del(int x)
 {
 	int whatever=find(x);
-	if (cnt[root]>1) {
+	if (cnt[root]>1)
+	{
 		cnt[root]--;
 		update(root);
 		return;
 	}
-	if (!ch[root][0]&&!ch[root][1]) {
+	if (!ch[root][0]&&!ch[root][1])
+	{
 		clear(root);
 		root=0;
 		return;
 	}
-	if (!ch[root][0]) {
+	if (!ch[root][0])
+	{
 		int oldroot=root;
 		root=ch[root][1];
 		f[root]=0;
 		clear(oldroot);
 		return;
-	} else if (!ch[root][1]) {
+	}
+	else if (!ch[root][1])
+	{
 		int oldroot=root;
 		root=ch[root][0];
 		f[root]=0;
@@ -155,9 +170,11 @@ int main()
 {
 	int n,opt,x;
 	scanf("%d",&n);
-	for (int i=1; i<=n; ++i) {
+	for (int i=1; i<=n; ++i)
+	{
 		scanf("%d%d",&opt,&x);
-		switch(opt) {
+		switch(opt)
+		{
 			case 1:
 				insert(x);
 				break;
