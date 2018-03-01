@@ -95,7 +95,7 @@ double Directed_MST(int root,int V,int E)
 		root=id[root];
 	}
 	/*
-	for(int i=extra-1;i>=m;i--)
+	for(int i=extra-1;i>=E;i--)
     	{
         	if(used[i])
         	{
