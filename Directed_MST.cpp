@@ -1,20 +1,28 @@
 const int inf=1e9;
-const int maxn=105;
-const int maxm=100005;
-struct point
-{
-	double x,y;
-}p[maxn];
+const int maxm=;
+const int maxn=;
 struct edge
 {
+	int id;
 	int from,to;
 	double w;
 }e[maxm];
 int pre[maxn],id[maxn],vis[maxn],n,m;
 double in[maxn];
+/*
+double value[maxm];//边的原长
+int add[maxm*maxn];
+int del[maxm*maxn];
+int extra;
+int used[maxm*maxn];
+int preid[maxn];
+*/
 double Directed_MST(int root,int V,int E)
 {
 	double ret=0;
+	/*
+	extra=E;
+	*/
 	while(1)
 	{
 		//1.找最小入边
@@ -23,7 +31,14 @@ double Directed_MST(int root,int V,int E)
 		{
 			int u=e[i].from;
 			int v=e[i].to;
-			if(e[i].w<in[v]&&u!=v) {pre[v]=u;in[v]=e[i].w;}
+			if(e[i].w<in[v]&&u!=v) 
+			{
+				pre[v]=u;
+				in[v]=e[i].w;
+				/*
+				preid[v]=e[i].id;
+				*/
+			}
 		}
 		for(int i=0;i<V;i++)
 		{
@@ -39,6 +54,9 @@ double Directed_MST(int root,int V,int E)
 		{
 			ret+=in[i];
 			int v=i;
+			/*
+			if(i!=root) used[preid[i]]++;
+			*/
 			while(vis[v]!=i&&id[v]==-1&&v!=root)
 			{
 				vis[v]=i;
@@ -62,10 +80,29 @@ double Directed_MST(int root,int V,int E)
 			int v=e[i].to;
 			e[i].from=id[u];
 			e[i].to=id[v];
-			if(id[u]!=id[v]) e[i].w-=in[v];
+			if(id[u]!=id[v]) 
+			{
+				e[i].w-=in[v];
+				/*
+				add[extra]=e[i].id;
+              			del[extra]=preid[v];
+                		e[i].id=extra;
+                		extra++;
+				*/
+			}			
 		}
 		V=cnt;
 		root=id[root];
 	}
+	/*
+	for(int i=extra-1;i>=m;i--)
+    	{
+        	if(used[i])
+        	{
+            		used[add[i]]++;
+            		used[del[i]]--;
+        	}
+    	}
+	*/
 	return ret;
 }
