@@ -1,33 +1,18 @@
-#include<cmath>
-using namespace std;
-int a[200005];
-int f1[200005][20]; //最小值数组
-int f2[200005][20]; //最大值数组
-int n,m;
-void rmq_init()
+int n,f[20][maxn],a[maxn];
+void pre()
 {
-	for(int i=1;i<=n;i++)
+	for(int i=1;i<=n;i++) f[0][i]=a[i];
+	int k=floor(log(n)/log(2));
+	for(int i=1;i<=k;i++)
 	{
-		f1[i][0]=a[i];
-		f2[i][0]=a[i];
-	}
-	int k=floor(log((double)n)/log(2.0));
-	for(int j=1;j<=k;j++)
-	{
-		for(int i=n;i>=1;i--)
+		for(int j=1;j<=n-(1<<i)+1;j++)
 		{
-			if(i+(1<<(j-1))<=n)
-			{
-				f1[i][j]=min(f1[i][j-1],f1[i+(1<<(j-1))][j-1]);
-				f2[i][j]=max(f2[i][j-1],f2[i+(1<<(j-1))][j-1]);
-			}
+			f[i][j]=max(f[i-1][j],f[i-1][j+(1<<(i-1))]);
 		}
 	}
 }
-int rmq(int i,int j) //查询最大值与最小值之差
+int rmq(int x,int y)
 {
-	int k=floor(log(j-i+1)/log(2.0));
-	int minnum=min(f1[i][k],f1[j-(1<<k)+1][k]);
-	int maxnum=max(f2[i][k],f2[j-(1<<k)+1][k]);
-	return maxnum-minnum;
+	int k=floor(log(y-x+1)/log(2));
+	return max(f[k][x],f[k][y-(1<<k)+1]);
 }
