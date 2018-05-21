@@ -1,57 +1,77 @@
-struct edge{
-	int to,next,v;
-}e[100010];
-
-int head[N<<1],ne=1,q[N<<1],h[N<<1],ans=0,n,S,T;
-
-inline void ins(int u,int v,int f){
-	ne++;
-	e[ne].to=v;
-	e[ne].next=head[u];
-	e[ne].v=f;
-	head[u]=ne;
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn=10005,maxm=100005,inf=INT_MAX;
+int n,m,s,t,idx[maxn],cur[maxn],d[maxn],top=1,ans,q[maxn];
+struct edge
+{
+	int to,next,w;
+} e[maxm<<1];
+void add(int x,int y,int w)
+{
+	e[++top].to=y;
+	e[top].next=idx[x];
+	e[top].w=w;
+	idx[x]=top;
 }
-
-inline void insert(int u,int v,int f){
-	ins(u,v,f);ins(v,u,0);
-}
-
-bool bfs(){
-	int t=0,w=1;
-	memset(h,-1,sizeof(h));
-	q[t]=S;h[S]=0;
-	while(t<w){
-		int now=q[t++];
-		for(int i=head[now];i;i=e[i].next){
-			int v=e[i].to;
-			if(h[v]==-1&&e[i].v){
-				h[v]=h[now]+1;
-				q[w++]=v;
+bool bfs()
+{
+	for(int i=1; i<=n; i++) cur[i]=idx[i];
+	memset(d,0x3f,sizeof(d));
+	int head=0,tail=0;
+	q[tail++]=s;
+	d[s]=0;
+	while(head<tail)
+	{
+		int x=q[head++];
+		for(int i=idx[x]; i; i=e[i].next)
+		{
+			int to=e[i].to;
+			if(d[x]+1<d[to]&&e[i].w)
+			{
+				d[to]=d[x]+1;
+				q[tail++]=to;
 			}
 		}
 	}
-	if(h[T]!=-1) return 1;
-	return 0;
+	return d[t]<=n;
 }
-
-int dfs(int x,int f){
-	if(x==T) return f;
-	int w,used=0;
-	for(int i=head[x];i;i=e[i].next){
-		int v=e[i].to;
-		if(h[v]==h[x]+1){
-			w=dfs(v,min(f-used,e[i].v));
-			e[i].v-=w;
-			e[i^1].v+=w;
-			used+=w;
-			if(used==f) return f;
+int dfs(int x,int lim)
+{
+	if(lim==0||x==t) return lim;
+	int flow=0,f;
+	for(int i=cur[x]; i; i=e[i].next)
+	{
+		cur[x]=i;
+		int to=e[i].to;
+		if(d[to]==d[x]+1&&(f=dfs(to,min(lim,e[i].w))))
+		{
+			flow+=f;
+			lim-=f;
+			e[i].w-=f;
+			e[i^1].w+=f;
+			if(lim==0) break;
 		}
 	}
-	if(!used) h[x]=-1;
-	return used;
+	return flow;
 }
-
-void dinic(){
+void dinic()
+{
 	while(bfs())
-		ans+=dfs(S,inf);
+	{
+		ans+=dfs(s,inf);
+	}
+}
+int main()
+{
+	scanf("%d%d%d%d",&n,&m,&s,&t);
+	for(int i=1; i<=m; i++)
+	{
+		int from,to,cap;
+		scanf("%d%d%d",&from,&to,&cap);
+		add(from,to,cap);
+		add(to,from,0);
+	}
+	dinic();
+	printf("%d\n",ans);
+	return 0;
 }
