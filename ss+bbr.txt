@@ -1,26 +1,17 @@
 CentOS 6 x64
 Paris
 
-[root@xurz97 ~]# history
-    1  wget --no-check-certificate https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.sh
-    2  chmod +x shadowsocks.sh
-    3  ./shadowsocks.sh 2>&1 | tee shadowsocks.log
-    4  vi /etc/rc.local
-    5  vi /etc/sysctl.conf
-    6  vi /etc/shadowsocks.json
-    7  /etc/init.d/shadowsocks restart
-    8  ls
-    9  vi shadowsocks.
-   10  vi shadowsocks.log 
-   11  wget -N --no-check-certificate https://raw.githubusercontent.com/91yun/serverspeeder/master/serverspeeder-all.sh && bash serverspeeder-all.sh
-   12  ls
-   13  wget --no-check-certificate https://github.com/teddysun/across/raw/master/bbr.sh
-   14  chmod +x bbr.sh
-   15  ./bbr.sh 
-   16  uname -r
-   17  sysctl net.ipv4.tcp_available_congestion_control
-   18  sysctl net.ipv4.tcp_congestion_control
-   19  sysctl net.core.default_qdisc
-   20  lsmod | grep bbr
-   21  /etc/init.d/shadowsocks status
-   22  exit
+wget --no-check-certificate https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.sh
+chmod +x shadowsocks.sh
+./shadowsocks.sh 2>&1 | tee shadowsocks.log
+/etc/init.d/shadowsocks restart
+wget --no-check-certificate https://github.com/teddysun/across/raw/master/bbr.sh
+chmod +x bbr.sh
+./bbr.sh 
+uname -r
+sysctl net.ipv4.tcp_available_congestion_control
+sysctl net.ipv4.tcp_congestion_control
+sysctl net.core.default_qdisc
+lsmod | grep bbr
+etc/init.d/shadowsocks status
+exit
